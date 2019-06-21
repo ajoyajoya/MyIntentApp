@@ -15,6 +15,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnMoveWithDataActivity;
     Button btnMoveWithObject;
     Button btnDialPhone;
+    Button btnMoveForResult;
+    TextView tvResult;
+
+    private int REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnMoveWithObject = findViewById(R.id.btn_move_activity_object);
         btnMoveWithObject.setOnClickListener(this);
+
+
+        btnMoveForResult = findViewById(R.id.btn_move_for_result);
+        btnMoveForResult.setOnClickListener(this);
+        tvResult = findViewById(R.id.tv_result);
+
 
     }
 
@@ -72,6 +82,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent dialPhoneIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+phoneNumber));
                 startActivity(dialPhoneIntent);
                 break;
+
+            case R.id.btn_move_for_result:
+                Intent moveForResultIntent = new Intent(MainActivity.this, MoveForResultActivity.class);
+                startActivityForResult(moveForResultIntent, REQUEST_CODE);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == MoveForResultActivity.RESULT_CODE) {
+                int selectedValue = data.getIntExtra(MoveForResultActivity.EXTRA_SELECTED_VALUE, 0);
+                tvResult.setText(String.format("Hasil : %s", selectedValue));
+            }
         }
     }
 
